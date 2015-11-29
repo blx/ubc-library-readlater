@@ -1,0 +1,9 @@
+{
+    "name": "org.blx.addreminder",
+    "description": "Add an item to the OS X Reminders app",
+    "path": "/usr/local/bin/addreminder",
+    "type": "stdio",
+    "allowed_origins": [
+        "chrome-extension://pjcngikloeebadiccnfpfohkehempflo/"
+    ]
+}

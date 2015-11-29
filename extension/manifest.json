@@ -1,0 +1,23 @@
+{
+    "name": "Add Book to Reminders",
+    "description": "Add a book from a UBC Library search result page to OS X's Reminders app.",
+    "version": "0.0.1",
+    "manifest_version": 2,
+
+    "browser_action": {
+        "default_title": "Add book to reminders"
+    },
+    "web_accessible_resources": [
+        "contentscript.js"
+    ],
+    "background": {
+        "scripts": [
+            "main.js"
+        ],
+        "persistent": false
+    },
+    "permissions": [
+        "nativeMessaging",
+        "activeTab"
+    ]
+}

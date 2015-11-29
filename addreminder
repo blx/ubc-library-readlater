@@ -1,0 +1,60 @@
+#!/usr/bin/env python2
+
+from subprocess import Popen, PIPE
+import sys
+import struct
+import json
+
+
+def read_msg():
+    """ -> Maybe str"""
+
+    text_length_bytes = sys.stdin.read(4)
+    
+    if len(text_length_bytes) == 0:
+        return None
+
+    text_length = struct.unpack('i', text_length_bytes)[0]
+
+    text = sys.stdin.read(text_length).decode('utf-8')
+    return json.loads(text)
+
+
+def output(msg):
+    """str -> """
+
+    encoded_msg = msg.encode('utf-8')
+
+    sys.stdout.write(struct.pack('I', len(encoded_msg)))
+
+    sys.stdout.write(encoded_msg)
+    sys.stdout.flush()
+
+
+def run_applescript(scpt):
+    """str -> (str, str)"""
+
+    p = Popen(['osascript', '-'], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+    out, err = p.communicate(scpt)
+    return (out, err)
+
+
+def make_reminder_script(text, list=None):
+    """str, ?str -> str"""
+
+    return """
+    tell application "Reminders"
+        set newremind to make new reminder{list}
+        set name of newremind to "{name}"
+    end tell
+    """.format(name=text, list=(' in list "%s"' % list) if list else '')
+
+
+
+if __name__ == "__main__":
+    msg = read_msg()
+    if msg:
+        script = make_reminder_script(msg['name'], list="lib")
+        run_applescript(script)
+
+    output('{"result": "success"}')
